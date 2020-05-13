@@ -1,7 +1,0 @@
-FROM alpine:3.9.6
-
-LABEL maintainer="alstolten@gmail.com"
-
-RUN apk --no-cache add curl
-
-CMD sh
