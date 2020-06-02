@@ -22,7 +22,8 @@ EOF
 fi
 
 # Make latest release anyway
-docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/ppc64le,linux/s390x,linux/arm -t alstolten/alpine-with-curl:latest --push -<<EOF
+docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/ppc64le,linux/s390x,linux/arm \
+-t alstolten/alpine-with-curl:latest --push -<<EOF
 FROM alpine:latest
 
 LABEL maintainer="alstolten@gmail.com"
