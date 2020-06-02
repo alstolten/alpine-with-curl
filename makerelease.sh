@@ -7,8 +7,9 @@ RELEASE_LIST=`comm <(curl -L -s 'https://registry.hub.docker.com/v2/repositories
 # If difference in tag list, then build. Use multiarch
 if [ -n "$RELEASE_LIST" ]; then
 	while IFS= read -r line; do
-		docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/ppc64le,linux/s390x,linux/arm	\
-		-t alstolten/alpine-with-curl:$line --push -<<EOF
+		docker buildx build --progress plain --no-cache \
+			--platform linux/amd64,linux/386,linux/arm64,linux/ppc64le,linux/s390x,linux/arm \
+			-t alstolten/alpine-with-curl:$line --push -<<EOF
 FROM alpine:$line
 
 LABEL maintainer="alstolten@gmail.com"
@@ -22,8 +23,9 @@ EOF
 fi
 
 # Make latest release anyway
-docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/ppc64le,linux/s390x,linux/arm \
--t alstolten/alpine-with-curl:latest --push -<<EOF
+docker buildx build --progress plain --no-cache \
+       	--platform linux/amd64,linux/386,linux/arm64,linux/ppc64le,linux/s390x,linux/arm \
+	-t alstolten/alpine-with-curl:latest --push -<<EOF
 FROM alpine:latest
 
 LABEL maintainer="alstolten@gmail.com"
