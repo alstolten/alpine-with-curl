@@ -36,3 +36,5 @@ RUN apk --no-cache add curl
 CMD sh
 EOF
 
+# Prune build cache
+docker buildx prune -af
