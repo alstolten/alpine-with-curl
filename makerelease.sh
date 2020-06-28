@@ -2,10 +2,10 @@
 
 set -Eeuo pipefail
 # Get latest difference of tags
-RELEASE_LIST=`comm <(curl -L -s 'https://registry.hub.docker.com/v2/repositories/library/alpine/tags?page_size=20' | jq '."results"[]["name"]' -r | grep -E "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}" | sort) <(curl -L -s 'https://registry.hub.docker.com/v2/repositories/alstolten/alpine-with-curl/tags?page_size=20' | jq '."results"[]["name"]' -r | grep -E "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}" | sort) -3`
+NEW_RELEASES=`comm -23 <(curl -L -s 'https://registry.hub.docker.com/v2/repositories/library/alpine/tags?page_size=20' | jq '."results"[]["name"]' -r | grep -E "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}" | sort) <(curl -L -s 'https://registry.hub.docker.com/v2/repositories/alstolten/alpine-with-curl/tags?page_size=20' | jq '."results"[]["name"]' -r | grep -E "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}" | sort)`
 
 # If difference in tag list, then build. Use multiarch
-if [ -n "$RELEASE_LIST" ]; then
+if [ -n "$NEW_RELEASES" ]; then
 	while IFS= read -r line; do
 		docker buildx build --progress plain --no-cache \
 			--platform linux/amd64,linux/386,linux/arm64,linux/ppc64le,linux/s390x,linux/arm \
@@ -19,7 +19,7 @@ RUN apk --no-cache add curl
 
 CMD sh
 EOF
-	done <<< "$RELEASE_LIST"
+	done <<< "$NEW_RELEASES"
 fi
 
 # Make latest release anyway
