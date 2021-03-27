@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -Eeuo pipefail
+set -Eeuox pipefail
 # Get latest difference of tags
-NEW_RELEASES=`comm -23 <(curl -L -s 'https://registry.hub.docker.com/v2/repositories/library/alpine/tags?page_size=20' | jq '."results"[]["name"]' -r | grep -E "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}" | sort) <(curl -L -s 'https://registry.hub.docker.com/v2/repositories/alstolten/alpine-with-curl/tags?page_size=20' | jq '."results"[]["name"]' -r | grep -E "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}" | sort)`
+NEW_RELEASES=$(comm -23 <(curl -L -s 'https://registry.hub.docker.com/v2/repositories/library/alpine/tags?page_size=20' | jq '."results"[]["name"]' -r | grep -E "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}" | sort) <(curl -L -s 'https://registry.hub.docker.com/v2/repositories/alstolten/alpine-with-curl/tags?page_size=20' | jq '."results"[]["name"]' -r | grep -E "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}" | sort))
 
 # If difference in tag list, then build. Use multiarch
 if [ -n "$NEW_RELEASES" ]; then
